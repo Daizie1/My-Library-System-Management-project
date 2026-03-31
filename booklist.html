@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Mirambi Library System</title>
+<style>
+/* GENERAL RESET */
+* { margin:0; padding:0; box-sizing:border-box; font-family: Arial,sans-serif; }
+body { background:#f4f6f9; color:#333; }
+
+/* BACKGROUND */
+.background {
+  position: fixed; width:100%; height:100%;
+  background:url('MERU.webp') no-repeat center/cover;
+  z-index:-2;
+  animation: rotateBg 120s linear infinite;
+  opacity:0.8;
+}
+.overlay { position:fixed; width:100%; height:100%; background:rgba(0,0,0,0.4); z-index:-1; }
+@keyframes rotateBg { from{transform:rotate(0deg);} to{transform:rotate(360deg);} }
+
+/* SIDEBAR */
+.sidebar {
+  position:fixed; width:220px; height:100%;
+  background:rgba(44,62,80,0.95); color:white; padding-top:20px;
+}
+.sidebar h2 { text-align:center; margin-bottom:20px; }
+.sidebar label, .sidebar a {
+  display:block; padding:12px 20px; cursor:pointer; transition:0.3s; color:white; text-decoration:none;
+}
+.sidebar label:hover, .sidebar a:hover { background:#f1c40f; color:black; }
+
+/* MAIN CONTENT */
+.main { margin-left:220px; padding:20px; }
+
+/* HIDE RADIO BUTTONS */
+input[name="menu"] { display:none; }
+
+/* SECTIONS */
+section { display:none; }
+#dashboard:checked ~ .main #sec-dashboard,
+#addbook:checked ~ .main #sec-addbook,
+#booklist:checked ~ .main #sec-booklist,
+#issued:checked ~ .main #sec-issued,
+#overdue:checked ~ .main #sec-overdue { display:block; }
+
+/* TOPBAR */
+.topbar { display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; position:sticky; top:0; background:rgba(255,255,255,0.95); padding:10px 0; z-index:1; }
+.search input { padding:8px 12px; border-radius:6px; border:none; outline:none; width:250px; }
+.user button { background:red; color:white; border:none; padding:6px 10px; border-radius:5px; cursor:pointer; }
+
+/* BOOK CARDS */
+.books { display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); gap:20px; }
+.card { background:rgba(255,255,255,0.95); padding:15px; border-radius:12px; transition:0.3s; cursor:pointer; position:relative;}
+.card:hover { transform:translateY(-5px); box-shadow:0 8px 20px rgba(0,0,0,0.3);}
+.card h3 { margin-bottom:5px;}
+.card p { font-size:14px; }
+.status { display:inline-block; margin-top:10px; padding:5px 10px; border-radius:20px; font-size:12px; color:white;}
+.available{background:#2ecc71;}
+.issued{background:#f39c12;}
+.overdue{background:#e74c3c;}
+
+/* DELETE BUTTON */
+.delete-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: #e74c3c;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 4px 8px;
+  cursor: pointer;
+  font-size: 12px;
+  z-index: 10;
+}
+
+/* RETURN BUTTON */
+.return-btn {
+  background:#2ecc71;
+  color:white;
+  border:none;
+  padding:4px 8px;
+  border-radius:5px;
+  margin-left:10px;
+  cursor:pointer;
+  font-size:12px;
+}
+
+/* BOOK DETAILS TOOLTIP */
+.card .details {
+  display:none; position:absolute; top:0; left:0; width:100%; height:100%;
+  background:rgba(0,0,0,0.85); color:white; padding:15px; border-radius:12px;
+  flex-direction:column; justify-content:center; align-items:center; text-align:center;
+}
+.card:hover .details { display:flex; }
+
+/* TABLE */
+table { width:100%; border-collapse: collapse; background: rgba(255,255,255,0.95); border-radius:10px; overflow:hidden;}
+table th, table td { padding:12px; text-align:left; border-bottom:1px solid #ddd;}
+table th { background:#34495e; color:white; }
+
+/* FOOTER */
+.footer { margin-top:30px; text-align:center; color:white; }
+
+/* ADD BOOK SUBMITTED MESSAGE */
+.submitted-msg {
+  margin-top: 15px;
+  color: #27ae60;
+  font-weight: bold;
+  display: none;
+}
+</style>
+</head>
+<body>
+
+<div class="background"></div>
+<div class="overlay"></div>
+
+<!-- RADIO BUTTONS FOR CSS TABS -->
+<input type="radio" name="menu" id="dashboard" checked>
+<input type="radio" name="menu" id="addbook">
+<input type="radio" name="menu" id="booklist">
+<input type="radio" name="menu" id="issued">
+<input type="radio" name="menu" id="overdue">
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <h2>📚 Mirambi Library</h2>
+  <label for="dashboard">Dashboard</label>
+  <label for="addbook">Add Book</label>
+  <label for="booklist">Book List</label>
+  <label for="issued">Issued Books</label>
+  <label for="overdue">Overdue Books</label>
+  <a href="index.html">Home</a>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="main">
+  <div class="topbar">
+    <div class="search"><input type="text" id="searchBar" placeholder="Search books..."></div>
+    <div class="user">👤 Admin <button>Logout</button></div>
+  </div>
+
+  <!-- DASHBOARD -->
+  <section id="sec-dashboard">
+    <h1>📊 Dashboard</h1>
+    <p>Total Books: <span id="totalBooks">0</span></p>
+    <p>Issued: <span id="issuedBooks">0</span> | Available: <span id="availableBooks">0</span> | Overdue: <span id="overdueBooks">0</span></p>
+  </section>
+
+  <!-- ADD BOOK -->
+  <section id="sec-addbook">
+    <h1>➕ Add Book</h1>
+    <input type="text" id="bookTitle" placeholder="Book Title"><br><br>
+    <input type="text" id="bookAuthor" placeholder="Author"><br><br>
+    <button id="addBookBtn">Add Book</button>
+    <p class="submitted-msg" id="submitMsg">✅ Book Added Successfully!</p>
+  </section>
+
+  <!-- BOOK LIST -->
+  <section id="sec-booklist">
+    <h1>📚 Book List</h1>
+    <div class="books" id="bookContainer"></div>
+  </section>
+
+  <!-- ISSUED / DELETED LOG -->
+  <section id="sec-issued">
+    <h1>📖 Issued / Deleted Log</h1>
+    <ul id="issuedLog"></ul>
+  </section>
+
+  <!-- OVERDUE BOOKS -->
+  <section id="sec-overdue">
+    <h1>⚠️ Overdue Books</h1>
+    <div class="books" id="overdueContainer"></div>
+  </section>
+
+  <div class="footer">© 2026 Mirambi Library | GROUP 17</div>
+</div>
+
+<script>
+// INITIAL BOOKS
+const initialBooks = [
+  {title:"Database Systems", author:"Elmasri", status:"available", publisher:"Pearson", isbn:"978-0133970777"},
+  {title:"Computer Networks", author:"Tanenbaum", status:"issued", borrower:"John Doe", due:"2026-04-10"},
+  {title:"Operating Systems", author:"Silberschatz", status:"issued", borrower:"Mary Johnson", due:"2026-03-25"},
+  {title:"Algorithms", author:"Cormen", status:"available", publisher:"MIT Press", isbn:"978-0262033848"},
+  {title:"Artificial Intelligence", author:"Russell & Norvig", status:"issued", borrower:"Jane Smith", due:"2026-04-12"},
+  {title:"Machine Learning", author:"Bishop", status:"available", publisher:"Springer", isbn:"978-0387310732"},
+  {title:"Web Development", author:"Duckett", status:"issued", borrower:"Michael Lee", due:"2026-04-08"},
+  {title:"Data Science", author:"Provost & Fawcett", status:"available", publisher:"O’Reilly", isbn:"978-1449361327"},
+  {title:"Software Engineering", author:"Pressman", status:"available", publisher:"McGraw-Hill", isbn:"978-0078022128"},
+  {title:"Cybersecurity", author:"Stallings", status:"issued", borrower:"Alice Green", due:"2026-04-15"}
+];
+
+// ELEMENTS
+const bookContainer = document.getElementById('bookContainer');
+const searchBar = document.getElementById('searchBar');
+const issuedLogContainer = document.getElementById('issuedLog');
+const overdueContainer = document.getElementById('overdueContainer');
+
+// ISSUED / DELETED LOG STORAGE
+let issuedLogs = JSON.parse(localStorage.getItem("issuedLogs")) || [];
+function addLog(message, bookObj){
+  const logObj = { message: message, book: bookObj };
+  issuedLogs.push(logObj);
+  localStorage.setItem("issuedLogs", JSON.stringify(issuedLogs));
+  displayLogs();
+}
+function displayLogs(){
+  if(!issuedLogContainer) return;
+  issuedLogContainer.innerHTML="";
+  issuedLogs.forEach((log, index)=>{
+    const li=document.createElement("li");
+    li.textContent = log.message;
+    li.style.background="white";
+    li.style.margin="5px";
+    li.style.padding="10px";
+    li.style.borderRadius="5px";
+    if(log.book && log.book.status!=='available'){
+      const returnBtn = document.createElement("button");
+      returnBtn.textContent="Return";
+      returnBtn.className="return-btn";
+      returnBtn.addEventListener('click', ()=>{
+        createBookCard({...log.book, status:'available'});
+        issuedLogs.splice(index,1);
+        localStorage.setItem("issuedLogs", JSON.stringify(issuedLogs));
+        displayLogs();
+      });
+      li.appendChild(returnBtn);
+    }
+    issuedLogContainer.appendChild(li);
+  });
+}
+
+// DASHBOARD COUNTERS
+function updateDashboard(){
+  const cards = document.getElementsByClassName('card');
+  let total=0, issued=0, available=0, overdue=0;
+  for(let card of cards){
+    total++;
+    const status = card.querySelector('.status').textContent.toLowerCase();
+    if(status==='issued') issued++;
+    else if(status==='available') available++;
+    else if(status==='overdue') overdue++;
+  }
+  document.getElementById('totalBooks').textContent = total;
+  document.getElementById('issuedBooks').textContent = issued;
+  document.getElementById('availableBooks').textContent = available;
+  document.getElementById('overdueBooks').textContent = overdue;
+}
+
+// CREATE BOOK CARD WITH 10-SECOND OVERDUE TIMER
+function createBookCard(book){
+  const card = document.createElement('div');
+  card.className='card';
+  card.innerHTML=`
+    <h3>${book.title}</h3>
+    <p>Author: ${book.author}</p>
+    <span class="status ${book.status}">${book.status.charAt(0).toUpperCase()+book.status.slice(1)}</span>
+    <button class="delete-btn">Delete</button>
+    <div class="details">
+      <h3>${book.title}</h3>
+      <p>Author: ${book.author}</p>
+      ${book.status==='available' ? 
+        `<p>Status: Available</p><p>Publisher: ${book.publisher||'N/A'}</p><p>ISBN: ${book.isbn||'N/A'}</p>` : 
+        `<p>Status: ${book.status.charAt(0).toUpperCase()+book.status.slice(1)}</p><p>Borrower: ${book.borrower||'N/A'}</p><p>Due Date: ${book.due||'N/A'}</p>`}
+    </div>
+  `;
+
+  card.querySelector('.delete-btn').addEventListener('click', ()=>{
+    addLog(`Book "${book.title}" by ${book.author} was deleted`, book);
+    bookContainer.removeChild(card);
+    updateDashboard();
+  });
+
+  bookContainer.appendChild(card);
+  updateDashboard();
+
+  // OVERDUE TIMER 10 SECONDS
+  if(book.status==='issued'){
+    setTimeout(()=>{
+      const statusSpan = card.querySelector('.status');
+      statusSpan.textContent='Overdue';
+      statusSpan.className='status overdue';
+
+      const clone = card.cloneNode(true);
+      const returnBtn = document.createElement('button');
+      returnBtn.textContent='Return';
+      returnBtn.className='return-btn';
+      returnBtn.addEventListener('click', ()=>{
+        clone.querySelector('.status').textContent='Available';
+        clone.querySelector('.status').className='status available';
+        createBookCard({
+          title: book.title,
+          author: book.author,
+          status: 'available',
+          publisher: book.publisher || 'N/A',
+          isbn: book.isbn || 'N/A'
+        });
+        card.remove();
+        updateDashboard();
+      });
+      clone.appendChild(returnBtn);
+      overdueContainer.appendChild(clone);
+      updateDashboard();
+    }, 10000);
+  }
+}
+
+// INITIAL BOOKS
+initialBooks.forEach(b=>createBookCard(b));
+
+// SEARCH FUNCTIONALITY
+searchBar.addEventListener('keyup', function(){
+  const filter = searchBar.value.toLowerCase();
+  const cards = document.getElementsByClassName('card');
+  for(let card of cards){
+    const title = card.querySelector('h3').textContent.toLowerCase();
+    const author = card.querySelector('p').textContent.toLowerCase();
+    card.style.display = (title.includes(filter) || author.includes(filter)) ? '' : 'none';
+  }
+});
+
+// ADD BOOK FUNCTIONALITY
+document.getElementById('addBookBtn').addEventListener('click', function(){
+  const titleInput = document.getElementById('bookTitle').value.trim();
+  const authorInput = document.getElementById('bookAuthor').value.trim();
+  if(titleInput && authorInput){
+    createBookCard({title:titleInput, author:authorInput, status:'available', publisher:'N/A', isbn:'N/A'});
+    document.getElementById('submitMsg').style.display='block';
+    document.getElementById('bookTitle').value='';
+    document.getElementById('bookAuthor').value='';
+    setTimeout(()=>{ document.getElementById('submitMsg').style.display='none'; },2000);
+  } else { alert('Please enter both title and author!'); }
+});
+
+// DISPLAY ISSUED LOG
+displayLogs();
+updateDashboard();
+</script>
+</body>
+</html>

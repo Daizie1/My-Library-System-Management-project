@@ -1,0 +1,212 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Library System Portfolio</title>
+
+<style>
+body{
+  margin:0;
+  font-family:Arial, sans-serif;
+  background:#0f172a;
+  color:white;
+}
+
+/* NAV */
+nav{
+  display:flex;
+  justify-content:space-between;
+  padding:15px 40px;
+  background:#020617;
+  position:fixed;
+  width:100%;
+}
+
+nav a{
+  color:white;
+  text-decoration:none;
+  margin:0 10px;
+}
+
+nav a:hover{
+  color:#38bdf8;
+}
+
+/* HERO */
+.hero{
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+}
+
+.hero h1{
+  font-size:3rem;
+}
+
+.hero span{
+  color:#38bdf8;
+}
+
+/* SECTIONS */
+section{
+  padding:80px 20px;
+}
+
+/* FEATURES */
+.features{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:20px;
+}
+
+.feature{
+  background:#1e293b;
+  padding:20px;
+  border-radius:10px;
+}
+
+/* SCREENSHOTS */
+.gallery{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+  gap:20px;
+}
+
+.gallery img{
+  width:100%;
+  border-radius:10px;
+}
+
+/* TECH STACK */
+.tech{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  justify-content:center;
+}
+
+.tech span{
+  background:#38bdf8;
+  color:black;
+  padding:8px 12px;
+  border-radius:5px;
+}
+
+/* CONTACT */
+.contact form{
+  max-width:400px;
+  margin:auto;
+  display:flex;
+  flex-direction:column;
+}
+
+input, textarea{
+  margin:10px 0;
+  padding:10px;
+  border:none;
+  border-radius:5px;
+}
+
+button{
+  padding:10px;
+  background:#38bdf8;
+  border:none;
+  cursor:pointer;
+}
+
+/* FOOTER */
+footer{
+  text-align:center;
+  padding:20px;
+  background:#020617;
+}
+</style>
+</head>
+
+<body>
+
+<!-- NAV -->
+<nav>
+  <h3>Library System</h3>
+  <div>
+    <a href="index.html">Home</a>
+    <a href="#features">Features</a>
+    <a href="#gallery">Gallery</a>
+    <a href="#tech">Tech Stack</a>
+    <a href="#contact">Contact</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div>
+    <h1><span>Library Management</span> System</h1>
+    <p>A complete system to manage books, users, and borrowing</p>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features">
+  <h2 style="text-align:center;">Key Features</h2>
+  <div class="features">
+    <div class="feature">📚 Add & Manage Books</div>
+    <div class="feature">👥 User Login System</div>
+    <div class="feature">🔍 Search Books Easily</div>
+    <div class="feature">📅 Borrow & Return Tracking</div>
+    <div class="feature">🔐 Secure Access Control</div>
+    <div class="feature">📊 Dashboard Overview</div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section id="gallery">
+  <h2 style="text-align:center;">System Preview</h2>
+  <div class="gallery">
+    <img src="World-Reader-tabs-in-knls.jpg" alt="Screenshot 1">
+    <img src="image.jpg" alt="Screenshot 2">
+    <img src="immg.jpg" alt="Screenshot 3">
+  </div>
+</section>
+
+<!-- TECH STACK -->
+<section id="tech">
+  <h2 style="text-align:center;">Technologies Used</h2>
+  <div class="tech">
+    <span>HTML</span>
+    <span>CSS</span>
+    <span>JavaScript</span>
+    <span>PHP</span>
+    <span>MySQL</span>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" class="contact">
+  <h2 style="text-align:center;">Contact Developer</h2>
+  <form onsubmit="sendMessage(event)">
+    <input type="text" placeholder="Your Name" required>
+    <input type="email" placeholder="Your Email" required>
+    <textarea placeholder="Message"></textarea>
+    <button type="submit">Send</button>
+  </form>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2026 Library System Project | Developed by Richard Oguda</p>
+</footer>
+
+<script>
+function sendMessage(e){
+  e.preventDefault();
+  alert("Message sent!");
+}
+</script>
+
+</body>
+</html>
+```

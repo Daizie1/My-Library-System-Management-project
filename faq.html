@@ -1,0 +1,62 @@
+<!-- FAQ SECTION -->
+<section id="sec-faq">
+  <h1>❓ Library FAQ</h1>
+  <div class="faq-container">
+    <div class="faq-item">
+      <button class="faq-question">1. How many books can I borrow at a time?</button>
+      <div class="faq-answer">
+        <p>Each user can borrow up to 5 books simultaneously. If you need more, please contact the library admin.</p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-question">2. How long can I keep a borrowed book?</button>
+      <div class="faq-answer">
+        <p>Books can be borrowed for up to 14 days. After this period, they become overdue and may incur penalties.</p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-question">3. What happens if I return a book late?</button>
+      <div class="faq-answer">
+        <p>Overdue books are logged in the system. You may be charged a late fee or restricted from borrowing new books until returned.</p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-question">4. Can I reserve a book that is currently issued?</button>
+      <div class="faq-answer">
+        <p>Yes, you can place a reservation. Once the book is returned, the system will notify you.</p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-question">5. How do I search for a specific book?</button>
+      <div class="faq-answer">
+        <p>Use the search bar in the Book List section to find books by title or author.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+/* FAQ Styling */
+.faq-container { margin-top: 20px; }
+.faq-item { margin-bottom: 10px; border-radius: 8px; overflow: hidden; background: rgba(255,255,255,0.95); }
+.faq-question {
+  width: 100%; text-align: left; padding: 12px 15px; cursor: pointer;
+  background: #34495e; color: white; border: none; outline: none; font-size: 16px;
+  transition: background 0.3s;
+}
+.faq-question:hover { background: #2c3e50; }
+.faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.3s ease, padding 0.3s ease; padding: 0 15px; }
+.faq-answer p { margin: 10px 0; }
+.faq-item.active .faq-answer { max-height: 200px; padding: 10px 15px; }
+</style>
+
+<script>
+// FAQ Toggle Functionality
+const faqButtons = document.querySelectorAll('.faq-question');
+faqButtons.forEach(button => {
+  button.addEventListener('click', () => {
+    const parent = button.parentElement;
+    parent.classList.toggle('active');
+  });
+});
+</script>

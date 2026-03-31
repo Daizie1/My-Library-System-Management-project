@@ -1,0 +1,338 @@
+```html id="imgbg91"
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Mirambi Library System</title>
+
+<style>
+body {
+  font-family: Arial;
+  margin: 0;
+  background: #f4f6f9;
+}
+
+/* 🔥 IMAGE ROTATING BACKGROUND */
+body::before {
+  content: "";
+  position: fixed;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: url('MERU.webp') no-repeat center center/cover;
+  opacity: 0.9; /* dim effect */
+  z-index: -1;
+}
+
+@keyframes rotateBg {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* ENSURE CONTENT ABOVE BACKGROUND */
+#loginPage, #mainSystem {
+  position: relative;
+  z-index: 1;
+}
+
+/* LOGIN PAGE */
+#loginPage {
+  display: flex;
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
+  background: rgba(44, 62, 80, 0.9);
+}
+
+.login-box {
+  background: white;
+  padding: 30px;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.login-box input {
+  padding: 10px;
+  margin: 10px;
+  width: 200px;
+}
+
+.login-box button {
+  padding: 10px;
+  background: #2ecc71;
+  color: white;
+  border: none;
+}
+
+/* MAIN SYSTEM */
+#mainSystem {
+  display: none;
+}
+
+header {
+  background: rgba(44, 62, 80, 0.9);
+  color: white;
+  padding: 15px;
+  text-align: center;
+  position: relative;
+}
+
+.logout {
+  position: absolute;
+  right: 20px;
+  top: 15px;
+  background: red;
+  padding: 8px;
+}
+
+/* NAV */
+nav {
+  background: rgba(52, 73, 94, 0.9);
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+nav a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+nav a:hover {
+  color: #f1c40f;
+}
+
+/* MARQUEE */
+.marquee-container {
+  overflow: hidden;
+  background: #f1c40f;
+}
+
+.marquee-text {
+  white-space: nowrap;
+  display: inline-block;
+  animation: scrollLeft 12s linear infinite;
+  font-weight: bold;
+  padding: 10px;
+}
+
+@keyframes scrollLeft {
+  0% { transform: translateX(100%); }
+  100% { transform: translateX(-100%); }
+}
+
+/* CONTENT */
+.container {
+  padding: 20px;
+}
+
+input {
+  padding: 8px;
+  margin: 5px;
+}
+
+button {
+  padding: 8px;
+  background: #2ecc71;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #27ae60;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+li {
+  background: rgba(255,255,255,0.9);
+  padding: 10px;
+  margin: 5px 0;
+  border-radius: 5px;
+}
+
+footer {
+  background: rgba(44, 62, 80, 0.9);
+  color: white;
+  text-align: center;
+  padding: 10px;
+  margin-top: 20px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- LOGIN -->
+<div id="loginPage">
+  <div class="login-box">
+    <h2>Solve to Enter</h2>
+    <p id="question"></p>
+    <input type="number" id="answer" placeholder="Your Answer">
+    <br>
+    <button onclick="checkAnswer()">Enter</button>
+    <p id="error" style="color:red;"></p>
+  </div>
+</div>
+
+<!-- SYSTEM -->
+<div id="mainSystem">
+
+<header>
+  <h1>📚 Mirambi Library System</h1>
+  <button class="logout" onclick="logout()">Logout</button>
+</header>
+
+<div class="marquee-container">
+  <div class="marquee-text">
+    🎉 Welcome Students to Mirambi Library System — Explore, Learn, Grow! 🎉
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    🎉 Welcome Students to Mirambi Library System — Explore, Learn, Grow! 🎉
+  </div>
+</div>
+
+<nav>
+  <a href="#">Dashboard</a>
+  <a href="booklist.html">booklist</a>
+  <a href="about.html">About</a>
+  <a href="portfolio.html">portfolio</a>
+  <a href="faq.html">FAQ</a>
+</nav>
+
+
+<div class="container">
+
+<h2>Dashboard</h2>
+<p>Total Books: <span id="totalBooks">0</span></p>
+
+<h2>Add Book</h2>
+<input id="title" placeholder="Book Title">
+<input id="author" placeholder="Author">
+<button onclick="addBook()">Add Book</button>
+
+<h2>Book List</h2>
+<ul id="bookList"></ul>
+
+</div>
+
+<footer>
+  <p>© 2026 Mirambi Library | Developed by DAISY</p>
+</footer>
+
+</div>
+
+<script>
+// (UNCHANGED JS CODE)
+let num1, num2, correctAnswer;
+
+function generateQuestion() {
+  num1 = Math.floor(Math.random() * 10);
+  num2 = Math.floor(Math.random() * 10);
+  correctAnswer = num1 + num2;
+  document.getElementById("question").innerText =
+    `What is ${num1} + ${num2}?`;
+}
+
+function checkAnswer() {
+  let userAnswer = parseInt(document.getElementById("answer").value);
+  if (userAnswer === correctAnswer) {
+    localStorage.setItem("loggedIn", "true");
+    showSystem();
+  } else {
+    document.getElementById("error").innerText = "Wrong answer! Try again.";
+    generateQuestion();
+  }
+}
+
+function logout() {
+  localStorage.removeItem("loggedIn");
+  location.reload();
+}
+
+function showSystem() {
+  document.getElementById("loginPage").style.display = "none";
+  document.getElementById("mainSystem").style.display = "block";
+}
+
+if (localStorage.getItem("loggedIn") === "true") {
+  showSystem();
+} else {
+  generateQuestion();
+}
+
+let books = JSON.parse(localStorage.getItem("books")) || [];
+
+function addBook() {
+  let title = document.getElementById("title").value;
+  let author = document.getElementById("author").value;
+
+  if (!title || !author) return alert("Fill all fields");
+
+  books.push({
+    id: Date.now(),
+    title,
+    author,
+    status: "Available"
+  });
+
+  localStorage.setItem("books", JSON.stringify(books));
+  displayBooks();
+}
+
+function displayBooks() {
+  let list = document.getElementById("bookList");
+  list.innerHTML = "";
+
+  books.forEach(book => {
+    let li = document.createElement("li");
+
+    li.innerHTML = `
+      ${book.title} - ${book.author} (${book.status})
+      <button onclick="issueBook(${book.id})">Issue</button>
+      <button onclick="returnBook(${book.id})">Return</button>
+      <button onclick="deleteBook(${book.id})" style="background:red;">Delete</button>
+    `;
+
+    list.appendChild(li);
+  });
+
+  document.getElementById("totalBooks").innerText = books.length;
+}
+
+function deleteBook(id) {
+  books = books.filter(b => b.id !== id);
+  localStorage.setItem("books", JSON.stringify(books));
+  displayBooks();
+}
+
+function issueBook(id) {
+  books = books.map(b => {
+    if (b.id === id) b.status = "Issued";
+    return b;
+  });
+  localStorage.setItem("books", JSON.stringify(books));
+  displayBooks();
+}
+
+function returnBook(id) {
+  books = books.map(b => {
+    if (b.id === id) b.status = "Available";
+    return b;
+  });
+  localStorage.setItem("books", JSON.stringify(books));
+  displayBooks();
+}
+
+displayBooks();
+</script>
+
+</body>
+</html>
+```
